@@ -94,6 +94,7 @@ public class ActiveRecJ {
         
         private final String tblName;
         private final String[] fields;
+        private String[] s_fields;
         private StringBuilder qs;
         private final List<String> where;
         private int limit;
@@ -163,7 +164,8 @@ public class ActiveRecJ {
         }
         
         public Table select(String[] fieldList) {
-            return null;
+            this.s_fields = fieldList;
+            return this;
         }
         public Table where(String condition) {
             if(this.where.size() > 0)
