@@ -94,7 +94,7 @@ public class ActiveRecJ {
         
         private final String tblName;
         private final String[] fields;
-        private String[] s_fields;
+        private List<String> s_fields;
         private StringBuilder qs;
         private final List<String> where;
         private int limit;
@@ -104,6 +104,7 @@ public class ActiveRecJ {
             this.tblName = tblName;
             this.fields = fields;
             this.where = new ArrayList<>();
+            this.s_fields = new ArrayList<>();
         }
         
         public void insert(List values) throws SQLException, InvalidParameterException {
@@ -164,7 +165,7 @@ public class ActiveRecJ {
         }
         
         public Table select(String[] fieldList) {
-            this.s_fields = fieldList;
+            this.s_fields = Arrays.asList(fieldList);
             return this;
         }
         public Table where(String condition) {
@@ -183,6 +184,15 @@ public class ActiveRecJ {
             return this;
         } 
         public ResultSet exec() throws SQLException {
+            if(this.s_fields.size() <= 0) {
+                this.qs = new StringBuilder(String.format("select * from %s", this.tblName));
+            }
+            else {
+                this.qs = new StringBuilder("select ");
+                for(String s:this.s_fields) {
+                    this.qs.append()
+                }
+            }
             // Build Query from qs and where clauses
             for(String c:this.where) {
                 this.qs.append(" ").append(c);
