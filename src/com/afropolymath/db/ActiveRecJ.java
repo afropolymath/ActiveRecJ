@@ -107,6 +107,13 @@ public class ActiveRecJ {
             this.s_fields = new ArrayList<>();
         }
         
+        /**
+         * Inserts a list values into the database table
+         * 
+         * @param values List of values
+         * @throws SQLException
+         * @throws InvalidParameterException 
+         */
         public void insert(List values) throws SQLException, InvalidParameterException {
             if(values.size() <= 0)
                 throw new InvalidParameterException("You have entered an invalid value for the values parameter");
@@ -136,6 +143,14 @@ public class ActiveRecJ {
             }
         }
         
+        /**
+         * Updates the fields represented in the kv HasMap Keyset with the values in the HashMap
+         * 
+         * @param index pk value
+         * @param kv HashMap containing fields to update and their new values
+         * @throws SQLException
+         * @throws InvalidParameterException 
+         */
         public void update(int index, HashMap<String, ?> kv) throws SQLException, InvalidParameterException {
             if(index < 0) 
                 throw new InvalidParameterException("The index parameter is expected to be an integer greater than 0");
@@ -153,10 +168,22 @@ public class ActiveRecJ {
             }
         }
         
+        /**
+         * Does an SQL select all statement
+         * 
+         * @return 
+         */
         public Table find() {
             this.qs = new StringBuilder(String.format("select * from %s", this.tblName));
             return this;
         }
+        
+        /**
+         * Create an SQL statement to select row of table with index <index>
+         * 
+         * @param index
+         * @return 
+         */
         public Table find(int index) {
             if(index < 0) 
                 throw new InvalidParameterException("The index parameter is expected to be an integer greater than 0");
@@ -164,10 +191,23 @@ public class ActiveRecJ {
             return this;
         }
         
+        /**
+         * Does an SQL select of the fields in fieldList
+         * 
+         * @param fieldList List of columns to be selected
+         * @return 
+         */
         public Table select(String[] fieldList) {
             this.s_fields = Arrays.asList(fieldList);
             return this;
         }
+        
+        /**
+         * Adds a condition to the search using the SQL WHERE
+         * 
+         * @param condition
+         * @return 
+         */
         public Table where(String condition) {
             if(this.where.size() > 0)
                 condition = String.format("and %s", condition);
@@ -175,27 +215,42 @@ public class ActiveRecJ {
             this.where.add(condition);
             return this;
         }
+        
         public Table or_where(String condition) {
             this.where.add(String.format("or %s", condition));
             return this;
         }
+        
+        /**
+         * Adds a limit to the SQL query
+         * 
+         * @param limit
+         * @return 
+         */
         public Table limit(int limit) {
             this.limit = limit;
             return this;
         } 
+        
+        /**
+         * Execute the stored SQL statement
+         * 
+         * @return
+         * @throws SQLException 
+         */
         public ResultSet exec() throws SQLException {
-            if(this.s_fields.size() <= 0) {
-                this.qs = new StringBuilder(String.format("select * from %s", this.tblName));
-            }
-            else {
+            if(this.s_fields.size() > 0) {
                 this.qs = new StringBuilder("select ");
-                for(String s:this.s_fields) {
-                    this.qs.append()
-                }
+                this.s_fields.stream().forEach((s) -> {
+                    this.qs.append(s).append(",");
+                });
+                this.qs.replace(-2, -1, String.format(" from %s", this.tblName));
             }
-            // Build Query from qs and where clauses
-            for(String c:this.where) {
-                this.qs.append(" ").append(c);
+            
+            if(this.where.size() > 0) {
+                this.where.stream().forEach((c) -> {
+                    this.qs.append(" ").append(c);
+                });
             }
             this.qs.append("limit ").append(limit);
             try (Statement stmt = db.createStatement()) {
