@@ -22,12 +22,22 @@ import java.util.List;
  * @author chidieberennadi
  */
 public class ActiveRecJ {
+    /**
+     * Connection object
+     */
     private final Connection db;
+    /**
+     * Constant clears existing database tables 
+     */
     public static final int OVERWRITE_TRUE = 0;
+    /**
+     * Constant retains existing database tables if they exist
+     */
     public static final int OVERWRITE_FALSE = 1;
     
     /**
      * ActiveRecJ Constructor
+     * 
      * @param db Connection Object
      */
     public ActiveRecJ(Connection db) {
@@ -36,16 +46,16 @@ public class ActiveRecJ {
     
     /**
      * 
-     * @param driver
-     * @param dsn
-     * @return
+     * @param driver DB Connection driver
+     * @param dsn Connection DSN string
+     * @return ActiveRecJ object
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    public static ActiveRecord createConnection(String driver, String dsn) throws SQLException, ClassNotFoundException {
+    public static ActiveRecJ createConnection(String driver, String dsn) throws SQLException, ClassNotFoundException {
         Class.forName(driver);
         Connection newConnection = DriverManager.getConnection(dsn);
-        return new ActiveRecord(newConnection);
+        return new ActiveRecJ(newConnection);
     }
     
     public Table createTable (String tblName, String[] fields, int overwrite) throws InvalidParameterException, SQLException {
