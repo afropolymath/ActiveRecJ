@@ -30,7 +30,7 @@ public class ActiveRecJ {
      * ActiveRecJ Constructor
      * @param db Connection Object
      */
-    public ActiveRecord(Connection db) {
+    public ActiveRecJ(Connection db) {
         this.db = db;
     }
     
