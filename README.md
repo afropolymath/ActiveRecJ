@@ -1,4 +1,6 @@
 # ActiveRecJ
+![Build status image](https://travis-ci.org/andela-cnnadi/ActiveRecJ.svg)
+
 Simple SQL Query Builder class for Java
 
 ##Usage
@@ -8,7 +10,7 @@ Create a new instance of ActiveRecord
 ActiveRecJ ar = ActiveRecJ.createConnection("org.sqlite.JDBC", "jdbc:sqlite:gtddata.sqlite");
 ```
 
-Define fields as a string array
+Define fields as a string array. Don't worry about the id field. That is already taken care of.
 
 ```
 String fields = {"task_name text", "task_description text", "time text", "date text", "recurring integer", "action integer"}
