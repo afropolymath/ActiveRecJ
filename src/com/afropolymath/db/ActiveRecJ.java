@@ -241,16 +241,16 @@ public class ActiveRecJ {
         public ResultSet exec() throws SQLException {
             if(this.s_fields.size() > 0) {
                 this.qs = new StringBuilder("select ");
-                this.s_fields.stream().forEach((s) -> {
+                for(String s:this.s_fields) {
                     this.qs.append(s).append(",");
-                });
+                }
                 this.qs.replace(-2, -1, String.format(" from %s", this.tblName));
             }
             
             if(this.where.size() > 0) {
-                this.where.stream().forEach((c) -> {
+                for(String c:this.where) {
                     this.qs.append(" ").append(c);
-                });
+                }
             }
             this.qs.append("limit ").append(limit);
             try (Statement stmt = db.createStatement()) {
